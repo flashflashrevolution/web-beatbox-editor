@@ -1,0 +1,232 @@
+* {
+	box-sizing: border-box;
+}
+body {
+	font-family: Tahoma, "Trebuchet MS", Helvetica, sans-serif;
+	font-size: 11px;
+	padding: 15px;
+	background: #111112;
+	color: #f8f8f8;
+	font-weight: bold;
+}
+
+.sticky {
+	position: fixed;
+	top: 15px;
+}
+
+.sticky_container {
+	
+}
+
+.sticky_container .container {
+	width: 100%;
+}
+
+.header, .editor_area {
+	border: 2px solid #484848;
+	border-radius: 15px;
+	padding: 0 15px;
+	margin: 0 0 15px 0;
+	background: #181819;
+	box-shadow: 0 0 5px #000;
+}
+
+.header {
+	padding: 15px;
+	text-align: center;
+}
+
+#audioPreview audio {
+	width: 100%;
+	margin: 0 0 15px 0;
+	border: 2px solid #484848;
+}
+
+.editor_area {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+}
+	.editor_area > div {
+		padding: 15px;
+		border-left: 2px solid #484848;
+	}
+
+	.editor_area > div:first-child {
+		border-left: none;
+	}
+	
+	.editor_area > div:nth-child(2) {
+		background: #111;
+		box-shadow: inset 0 0 5px #000;
+	}
+	
+	#chartPreviewContainer {
+		width: 315px;
+		margin: 0 auto;
+	}
+
+#chart_tag_empty, #chart_box {
+	color: #fff;
+	width: 245px;
+	margin: 0 auto;
+	text-align: center;
+}
+#chart_box {
+	position: relative;
+	background: #111 url('notes/chart_background.png') 0 6px;
+}
+.song_note {
+	background: transparent no-repeat top left;
+	width:32px;
+	height:32px;
+	position: absolute;
+}
+.song_note.l0 {
+	left: 10px;
+	transform: rotate(90deg);
+}
+
+.song_note.l1 {
+	left: 74px;
+}
+
+.song_note.l2 {
+	left: 138px;
+	transform: rotate(180deg);
+}
+
+.song_note.l3 {
+	left: 202px;
+	transform: rotate(270deg);
+}
+
+.song_note.selected {
+    animation: pulse 1s infinite ease-in-out;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.song_note.blue { background-image: url('notes/note_blue.png'); }
+.song_note.red { background-image: url('notes/note_red.png'); }
+.song_note.yellow { background-image: url('notes/note_yellow.png'); }
+.song_note.green { background-image: url('notes/note_green.png'); }
+.song_note.orange { background-image: url('notes/note_orange.png'); }
+.song_note.pink { background-image: url('notes/note_pink.png'); }
+.song_note.purple { background-image: url('notes/note_purple.png'); }
+.song_note.cyan { background-image: url('notes/note_cyan.png'); }
+.song_note.white { background-image: url('notes/note_white.png'); }
+
+#right_col .container > div {
+	border-top: 2px solid #484848;
+	padding: 10px 0;
+	width: 100%;
+}
+
+#right_col .container > div:first-child {
+	border: 0;
+	padding: 0 0 10px;
+}
+
+#editor_jump span {
+	display: inline-block;
+	width: 100px;
+	margin: 7px 0 0;
+}
+
+#editor_jump span:first-child {
+	margin: 0;
+}
+
+#editor_jump input {
+	width: 107px;
+}
+
+#editor_jump input[type="button"] {
+	width: 50px;
+}
+
+#editor_jump select {
+	width: 113px;
+}
+
+#editor_options a, #download_urls a {
+	display: inline-block;
+	padding: 5px;
+	border: 2px solid #484848;
+	background: #333;
+	margin: 2px;
+	font-weight: bold;
+	min-width: 150px;
+	text-align: center;
+}
+
+#history > div {
+	margin: 5px 0 0;
+}
+	
+
+#download_urls a {
+	background: #d3f1ff;
+}
+
+/****************************************************************************/
+
+#receptorModel {
+	position: fixed;
+	top: 50px;
+	left: 50%;
+	transform: translate(-50%, 0);
+	border: 2px solid #484848;
+	background: #ededed;
+	padding: 15px;
+	z-index: 100000;
+	box-shadow: 0 0 5px #000;
+	width: 400px;
+}
+
+#noteModel {
+	position: absolute;
+	top: 50px;
+	left: 50px;
+	border: 2px solid #484848;
+	background: #333;
+	padding: 15px;
+	z-index: 100000;
+	box-shadow: 0 0 5px #000;
+}
+
+#noteModel h2 {
+	margin: 0 0 5px;
+}
+
+#noteModel span {
+	display: inline-block;
+	width: 100px;
+	margin: 7px 0 0;
+}
+
+#noteModel span:first-child {
+	margin: 0;
+}
+
+#noteModel .params input {
+	width: 113px;
+}
+
+#noteModel .params select {
+	width: 113px;
+}
+
+#noteModel .save {
+	width: 100%;
+	margin: 5px 0 0 0;
+}
+
+#noteModel .save input {
+	width: 100%;
+}
