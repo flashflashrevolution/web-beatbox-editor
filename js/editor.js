@@ -1,6 +1,8 @@
 var lane_classes = ["l0", "l1", "l2", "l3"];
 var color_classes = ["blue", "red", "yellow",  "green", "orange", "pink", "purple", "cyan", "white"];
 
+var generated_tag_end = null;
+
 var editor_tag = null;
 var editor_beatbox = null;
 var editor_index = null;
@@ -202,7 +204,7 @@ function noteCloneAllSorted(data) {
 function constantPoolClone(data) {
 	let out = [];
 	$.each(data, function (index, value) {
-		out.push(value[0]);
+		out.push(value);
 	});
 	return out;
 }
@@ -277,16 +279,28 @@ function editorWriteFile() {
 	if(editor_beatbox == null || editor_tag == null)
 		return;
 
+	// Generate New Filename
+	var newFileName = swf_file_name.substr(0, swf_file_name.length - 4);
+	newFileName += "." + (new Date().toLocaleString()).replace(/[\/|:|\s]/g, "_").replace(/,/g, "");
+	newFileName += ".swf";
+	
 	// Rebuild Beatbox Order
 	var newBeatboxArray = noteCloneAllSorted(editor_beatbox);
 	var newConstantPool = constantPoolClone(editor_tag["pool"]);
 	
 	// Write File
+	var beatboxSize = (generated_tag_end || editor_tag.header.end);
+	
 	var newBeatbox = generateBeatBoxActionTag(newBeatboxArray, newConstantPool);
+	var newBeatboxBuffer = newBeatbox.getBuffer();
 	
 	swf_write_buffer.seek(editor_tag.header.start);
-	swf_write_buffer.replaceBytes(newBeatbox.getBuffer(), editor_tag.header.end);
+	swf_write_buffer.replaceBytes(newBeatboxBuffer, beatboxSize);
 	
+	// Keep Length of new Beatbox for next writes.
+	generated_tag_end = editor_tag.header.start + newBeatboxBuffer.byteLength;
+	
+	// Create Buffers
 	var raw_data = swf_write_buffer.buffer_raw.slice(8);
 	var compressed_data = pako.deflate(raw_data);
 	var new_size = compressed_data.byteLength + 8;
@@ -296,7 +310,7 @@ function editorWriteFile() {
 	var final_file_arrr = new Uint8Array(final_file);
 	
 	// Copy Header
-	final_file_view.setUint8(0, 0x43);
+	final_file_view.setUint8(0, 0x43); // Char 'C'
 	for(var i = 1; i < 4; i++)
 		final_file_view.setUint8(i, swf_write_buffer.buffer.getUint8(i));
 	
@@ -306,20 +320,12 @@ function editorWriteFile() {
 	// Copy Compressed to Final
 	final_file_arrr.set(compressed_data, 8);
 	
+	// Create Binary Blobs
 	var blob = new Blob([final_file_arrr]);
 	var blobUrl = URL.createObjectURL(blob);
 	
-	// Generate New Filename
-	var newFileName = swf_file_name.substr(0, swf_file_name.length - 4);
-	newFileName += "." + (new Date().toLocaleString()).replace(/[\/|:|\s]/g, "_").replace(/,/g, "");
-	
-	var link = document.createElement("a");
-	link.href = blobUrl;
-	link.download = newFileName + ".swf";
-	link.innerHTML = "&gt; Download Chart SWF @ " + (new Date().toLocaleString()) + "<br>";
-	$("#download_urls").append(link);
-	
-	console.log(newBeatbox);
+	// Create Download Link
+	$("#download_urls").append('<a href="' + blobUrl + '" download="' + newFileName + '">&gt; Download Chart SWF @ ' + (new Date().toLocaleString()) + '</a><br>');
 }
 
 function editorShiftFrames() {

@@ -74,7 +74,7 @@ body {
 }
 #chart_box {
 	position: relative;
-	background: #111 url('notes/chart_background.png') 0 6px;
+	background: #111 url('notes/chart_background.png');
 }
 .song_note {
 	background: transparent no-repeat top left;
