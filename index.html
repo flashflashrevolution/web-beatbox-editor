@@ -12,6 +12,7 @@
 	<script type="text/javascript" src="js/editor.js"></script>
 	<script type="text/javascript" src="js/history.js"></script>
 	<script type="text/javascript" src="js/generator.js"></script>
+	<script type="text/javascript" src="js/url-loader.js"></script>
 	
 	<!-- Chart Preview -->
 	<script type="text/javascript" src="js/p5.min.js"></script>
@@ -20,6 +21,9 @@
 	 <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
+	<div id="progressBar" style="display:none;">
+		<div class="fill" style="width:0%;"></div>
+	</div>
 	<div id="noteModel" style="display:none;">
 		<h2>Editing Note: <span class="noteIndex">0</span></h2>
 		<div class="params">
@@ -51,7 +55,7 @@
 	</div>
 	<div class="header">
 		<div class="file_selector">
-			<input class="swfFile" type="file"></input>
+			<input class="urlFile" type="button" value="Load External URL"></input> | <input class="swfFile" type="file"></input>
 		</div>
 	</div>
 	<div class="editor_area">
