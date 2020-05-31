@@ -1,5 +1,5 @@
 console.log("So you want to to view a FFR SWF File in pure JS...\nFine.\n\n\nWait...\nAn Owl built an entire chart editor as well?.\n\n\nHow does an Owl even code?");
-console.log("[FFR BeatBox SWF Editor v1.03]");
+console.log("[FFR BeatBox SWF Editor v1.1.0]");
 
 var swf_array_buffer = null;
 var swf_data_view = null;
@@ -17,11 +17,12 @@ $(function(){
 function swfFile_click(e) {
 	// Editor Code
 	resetEditor();
-	
-	// Get File Information
-    var inputFiles = this.files;
-	
-    if(inputFiles == undefined || inputFiles.length == 0)
+
+    loadFileList(this.files);
+}
+
+function loadFileList(inputFiles) {
+	if(inputFiles == undefined || inputFiles.length == 0)
 		return;
 	
     var inputFile = inputFiles[0];

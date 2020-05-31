@@ -175,6 +175,34 @@ body {
 }
 
 /****************************************************************************/
+#fileDropOverlay {
+	z-index: 100001;
+	display:none;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: rgba(0, 0, 0, 0.75);
+}
+
+#fileDropOverlay > div {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    border: 2px solid #484848;
+    background: #181819;
+    font-size: 55px;
+    padding: 20px 30px;
+    border-radius: 20px;
+	box-shadow: 0 0 5px #000;
+}
+
+body.fileDrag #fileDropOverlay {
+	display:block;
+}
+
 #progressBar {
 	position: fixed;
 	bottom: 0;
