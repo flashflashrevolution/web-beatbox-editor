@@ -1,5 +1,5 @@
 console.log("So you want to to view a FFR SWF File in pure JS...\nFine.\n\n\nWait...\nAn Owl built an entire chart editor as well?.\n\n\nHow does an Owl even code?");
-console.log("[FFR BeatBox SWF Editor v1.2.0]");
+console.log("[FFR BeatBox SWF Editor v1.2.1]");
 
 var swf_array_buffer = null;
 var swf_data_view = null;
@@ -28,11 +28,14 @@ function loadFileList(inputFiles) {
     var inputFile = inputFiles[0];
 	
 	// Verify Type
+	var typeCheck = true;
 	if(inputFile["type"] != "application/x-shockwave-flash") {
-		alert("Unexpected file type, got \"" + inputFile["type"] + "\" not \"application/x-shockwave-flash\"");
-		return;
+		typeCheck = confirm("Unexpected file type, got \"" + inputFile["type"] + "\" not \"application/x-shockwave-flash\"\nLoad anyway?");
 	}
+	if(!typeCheck)
+		return;
 	
+	// Set Filename
 	swf_file_name = inputFile["name"];
 	
 	// Read input SWF File

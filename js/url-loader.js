@@ -45,10 +45,12 @@ function loadExternalSWLURLRequest(inputUrl) {
 		var arrayBuffer = oReq.response; // Note: not oReq.responseText
 		
 		// Check Header for File type.
+		var typeCheck = true;
 		if(oReq.getResponseHeader("content-type") != "application/x-shockwave-flash") {
-			alert("Unexpected file type, got \"" + oReq.getResponseHeader("content-type") + "\" not \"application/x-shockwave-flash\"");
-			return;
+			typeCheck = confirm("Unexpected file type, got \"" + oReq.getResponseHeader("content-type") + "\" not \"application/x-shockwave-flash\"\nLoad anyway?");
 		}
+		if(!typeCheck)
+			return;
 		
 		// Check buffer and Buffer Length
 		if (arrayBuffer && arrayBuffer.byteLength > 0) {
