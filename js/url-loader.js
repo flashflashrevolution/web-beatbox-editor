@@ -1,37 +1,48 @@
-function loadExternalURL() {
+useCORSPassthrough = true;
+CORSPassthroughURL = "https://cors-anywhere.herokuapp.com/";
+
+function buildXHRURL(url) {
+	if(useCORSPassthrough)
+		return CORSPassthroughURL + url;
+	
+	return url;
+}
+
+function loadExternalSWFURL() {
 	var loadUrl = prompt("Enter URL", "");
 
 	if (loadUrl == null || loadUrl == "" || loadUrl.length < 7) {
 		alert('Invalid URL');
 	}
 	else {
-		loadExternalURLRequest(loadUrl);
+		loadExternalSWLURLRequest(loadUrl);
 	} 
 }
 
-function loadExternalURLRequest(inputUrl) {
+function loadExternalSWLURLRequest(inputUrl) {
 	console.log("Attempting Load of URL:", inputUrl);
-	$("#progressBar").show();
+	$("#progressBarOverlay").show();
+	$("#progressBarOverlay .fill").css('width', "0%");
 	
 	var oReq = new XMLHttpRequest();
-	oReq.open("GET", inputUrl, true);
+	oReq.open("GET", buildXHRURL(inputUrl), true);
 	oReq.responseType = "arraybuffer";
 	
 	oReq.onprogress = function (oEvent) {
 		var percentage = Math.round((oEvent.loaded / oEvent.total) * 100);
-		$("#progressBar .fill").css('width', percentage + "%");
+		$("#progressBarOverlay .fill").css('width', percentage + "%");
 	};
 	
 	oReq.onerror = function (oEvent) {
 		alert('Download of "' + inputUrl + '" failed.');
-		$("#progressBar").hide();
+		$("#progressBarOverlay").hide();
+		$("#progressBarOverlay .fill").css('width', "0%");
 	};
 	
 	oReq.onload = function (oEvent) {
-		$("#progressBar").hide();
-		$("#progressBar .fill").css('width', "0%");
+		$("#progressBarOverlay").hide();
+		$("#progressBarOverlay .fill").css('width', "0%");
 		var arrayBuffer = oReq.response; // Note: not oReq.responseText
-		console.log(oReq);
 		
 		// Check Header for File type.
 		if(oReq.getResponseHeader("content-type") != "application/x-shockwave-flash") {
@@ -45,7 +56,7 @@ function loadExternalURLRequest(inputUrl) {
 			resetEditor();
 			
 			// Set SWF Name
-			swf_file_name = "external_url.swf";
+			swf_file_name = inputUrl.substr(inputUrl.lastIndexOf("/") + 1);
 			
 			// Start Editor
 			swfFile_Ready(arrayBuffer);

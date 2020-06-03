@@ -203,7 +203,7 @@ body.fileDrag #fileDropOverlay {
 	display:block;
 }
 
-#progressBar {
+#progressBarOverlay {
 	position: fixed;
 	bottom: 0;
 	left: 0;
@@ -216,7 +216,7 @@ body.fileDrag #fileDropOverlay {
 	z-index: 100000;
 }
 
-#progressBar .fill {
+#progressBarOverlay .fill {
 	height: 25px;
 	background: #7e7e7e;
 	transition: width 0.25s;

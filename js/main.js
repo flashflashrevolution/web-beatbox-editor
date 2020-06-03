@@ -9,7 +9,7 @@ var swf_file_name = "";
 
 $(function(){
     $(".urlFile").on('click', function(e) {
-		loadExternalURL();
+		loadExternalSWFURL();
 	});
     $(".swfFile").change(swfFile_click);
 })
@@ -51,8 +51,9 @@ function swfFile_Ready(array_buffer) {
 	swf_tags = uncompress(swf_array_buffer);
 	swf_write_buffer = swf_tags.buffer;
 	
-	console.log(swf_tags);
+	console.log(swf_file_name, swf_tags);
 	
+	// Chart Data
 	var chart_tag = getBeatBox();
 	var chart_data = chart_tag["variables"]["_root"]["beatBox"];
 	
@@ -63,6 +64,7 @@ function swfFile_Ready(array_buffer) {
 	
 	populateEditor(chart_tag);
 	
+	// Music Data
 	var music_binary = getAudio();
 	var blob = new Blob([music_binary], {type : 'audio/mpeg'});
 	var blobUrl = URL.createObjectURL(blob);
@@ -70,7 +72,7 @@ function swfFile_Ready(array_buffer) {
 	$("#source").attr("src", blobUrl);
 	$("#audio")[0].pause();
 	$("#audio")[0].load();//suspends and restores all audio element
-	//$("#audio")[0].oncanplaythrough =  $("#audio")[0].play();
+	//$("#audio")[0].oncanplaythrough = $("#audio")[0].play();
 	
 	if(chartPreview)
 		chartPreview.setChartAudio(blob);
