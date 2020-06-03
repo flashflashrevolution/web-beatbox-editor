@@ -1,31 +1,20 @@
-var editor_history = [];
-var editor_history_index = 0;
+var edit_history = new HistoryEditor();
+
+//////////////////////////////////////////////////////////////////////
+function historyKeyInput(evt) {
+      var e = window.event? event : evt
+	  
+	  // Ctrl + Y
+      if (e.keyCode == 89 && e.ctrlKey) edit_history.stepForward();
+	  
+	  // Crtl + Z
+      if (e.keyCode == 90 && e.ctrlKey) edit_history.stepBack();
+}
+document.onkeydown = historyKeyInput;
 
 function e_historyClick(event) {
 	var index = $(event.currentTarget).attr("data-index");
-	historyUndo(index);
-}
-
-function historyClear() {
-	editor_history = [];
-	editor_history_index = 0;
-	$("#history").empty();
-}
-
-function historyAdd(type, data, log_text, ignore_changes) {
-	if(historyChangeCount(data) > 0 || ignore_changes) {
-		var id = editor_history_index++;
-		var entry = {
-			"id": id,
-			"type": type,
-			"data": data
-		};
-		editor_history.push(entry);
-		var historyHtml = '<div title="Undo Action" data-index="' + id + '" id="his' + id + '"><a>• ' + log_text + '</a></div>';
-		$("#history").append(historyHtml);
-		$("#his" + id).on("click", e_historyClick);
-		if($("#history").children().length > 1) $("#history_change_text").hide();
-	}
+	edit_history.jumpToHistory(Number(index));
 }
 
 function historyChangeText(entry) {
@@ -46,69 +35,180 @@ function historyChangeCount(entry) {
 	return historyCount;
 }
 
-function historyGetEntry(id) {
-	var entries = editor_history.length - 1;
-	for(var i = entries; i >= 0; i--)
-		if(editor_history[i].id == id)
-			return editor_history[i];
+//////////////////////////////////////////////////////////////////////
+
+function HistoryEditor() {
+	this.entries = [];
+	this.active_index = 0;
+}
+
+HistoryEditor.prototype.clear = function() {
+	this.entries = [];
+	this.active_index = 0;
+	$("#history").html("History:");
+}
+
+HistoryEditor.prototype.add = function(type, data, log_text, ignore_changes) {
+	if(ignore_changes || historyChangeCount(data) > 0) {
+		// Remove Undo History that is invalid now.
+		if(this.active_index < this.entries.length - 1) {
+			this.entries.length = this.active_index + 1;
+			$("#history .undo").remove();
+		}
 		
-	return null;
+		// Add New Entry
+		var id = this.entries.length;
+		var entry = {
+			"id": id,
+			"type": type,
+			"data": data
+		};
+		
+		if(this.build(entry)) {
+			// Set History Index
+			this.active_index = id;
+			
+			// Add HTML Button
+			var historyHtml = '<div data-index="' + id + '" id="history_entry_' + id + '"><a>• ' + log_text + '</a></div>';
+			$("#history").append(historyHtml);
+			$("#history_entry_" + id).on("click", e_historyClick);
+		}
+	}
 }
 
-function historyDeleteEntry(id) {
-	var entries = editor_history.length - 1;
-	for(var i = entries; i >= 0; i--)
-		if(editor_history[i].id == id)
-			editor_history.splice(i, 1);
+HistoryEditor.prototype.get = function(id) {
+	return this.entries[id] || null;
 }
 
-function historyUndo(id) {
-	var entry = historyGetEntry(id);
-	
-	if(entry == null)
-		return;
+HistoryEditor.prototype.build = function(entry) {
+	var built = null;
 	
 	switch(entry["type"]) {
-		case "note":
-			historyUndoTypeNote(entry);
-			break;
-		case "shift":
-			historyUndoTypeShift(entry);
-			break;
-		case "color_random":
-			historyUndoTypeColorRandomizer(entry);
-			break;
+		case "load":			built = new HistoryTypeLoad(entry);			break;
+		case "note":			built = new HistoryTypeNote(entry);			break;
+		case "shift":			built = new HistoryTypeShift(entry);		break;
+		case "color_random":	built = new HistoryTypeColorRandom(entry);	break;
 	}
 	
-	// Remove Node in History List
-	historyDeleteEntry(id);
-	$("#his" + id).remove();
-	if($("#history").children().length <= 1)
-		$("#history_change_text").show();
+	if(built != null) {
+		this.entries.push(built);
+		return true;
+	}
+	return false;
+}
+
+HistoryEditor.prototype.undoEntry = function(id) {
+	this.entries[id].undo();
+	$("#history_entry_" + id).addClass("undo");
+	//console.log("Undo Entry", id);
+}
+
+HistoryEditor.prototype.redoEntry = function(id) {
+	this.entries[id].redo();
+	$("#history_entry_" + id).removeClass("undo");
+	//console.log("Redo Entry", id);
+}
+
+HistoryEditor.prototype.jumpToHistory = function(index) {
+	//console.log("History Jump", this.active_index, '->', index);
+	var entry = this.get(index);
+	
+	if(entry == null || this.active_index == index)
+		return;
+	
+	// We're ahead, go back.
+	if(this.active_index > index) {
+		for(var i = this.active_index; i > index; i--) {
+			this.undoEntry(i);
+		}
+	}
+	// We're behind, go forward.
+	else if(this.active_index < index) {
+		for(var i = this.active_index; i <= index; i++) {
+			this.redoEntry(i);
+		}
+	}
+	this.active_index = index;
+}
+
+HistoryEditor.prototype.stepBack = function() {
+	if(this.entries.length > 1 && this.active_index > 0) {
+		this.undoEntry(this.active_index);
+		this.active_index--;
+	}
+}
+
+HistoryEditor.prototype.stepForward = function() {
+	if(this.entries.length > 1 && this.active_index < this.entries.length - 1) {
+		this.active_index++;
+		this.redoEntry(this.active_index);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
+function HistoryTypeLoad(entry) {}
+HistoryTypeLoad.prototype.undo = function() {}
+HistoryTypeLoad.prototype.redo = function() {}
 
-function historyUndoTypeNote(entry) {
-	var note_index = entry["data"]["index"];
+//////////////////////////////////////////////////////////////////////
+function HistoryTypeNote(entry) {
+	this.entry = entry;
+}
+
+HistoryTypeNote.prototype.undo = function() {
+	var note_index = this.entry["data"]["index"];
 	
 	// Update Array
-	editor_beatbox[note_index][0] = entry["data"]["old"]["f"];
-	editor_beatbox[note_index][1] = entry["data"]["old"]["d"];
-	editor_beatbox[note_index][2] = entry["data"]["old"]["c"];
+	editor_beatbox[note_index][0] = this.entry["data"]["old"]["f"];
+	editor_beatbox[note_index][1] = this.entry["data"]["old"]["d"];
+	editor_beatbox[note_index][2] = this.entry["data"]["old"]["c"];
 	
 	// Update HTML Node
 	updateNoteDisplay(note_index);
 }
 
-function historyUndoTypeShift(entry) {
-	var frame_shift = entry["data"]["frames"];
+HistoryTypeNote.prototype.redo = function() {
+	var note_index = this.entry["data"]["index"];
+	
+	// Update Array
+	editor_beatbox[note_index][0] = this.entry["data"]["new"]["f"];
+	editor_beatbox[note_index][1] = this.entry["data"]["new"]["d"];
+	editor_beatbox[note_index][2] = this.entry["data"]["new"]["c"];
+	
+	// Update HTML Node
+	updateNoteDisplay(note_index);
+}
+
+//////////////////////////////////////////////////////////////////////
+function HistoryTypeShift(entry) {
+	this.entry = entry;
+}
+
+HistoryTypeShift.prototype.undo = function() {
+	var frame_shift = this.entry["data"]["frames"];
 	noteShiftFrames(-frame_shift, true);
 }
 
-function historyUndoTypeColorRandomizer(entry) {
-	for(var i = 0; i < entry["data"]["old"].length; i++) {
-		editor_beatbox[i][2] = entry["data"]["old"][i];
+HistoryTypeShift.prototype.redo = function() {
+	var frame_shift = this.entry["data"]["frames"];
+	noteShiftFrames(frame_shift, true);
+}
+
+//////////////////////////////////////////////////////////////////////
+function HistoryTypeColorRandom(entry) {
+	this.entry = entry;
+}
+
+HistoryTypeColorRandom.prototype.undo = function() {
+	for(var i = 0; i < this.entry["data"]["old"].length; i++) {
+		editor_beatbox[i][2] = this.entry["data"]["old"][i];
+	}
+	drawNoteField();
+}
+
+HistoryTypeColorRandom.prototype.redo = function() {
+	for(var i = 0; i < this.entry["data"]["new"].length; i++) {
+		editor_beatbox[i][2] = this.entry["data"]["new"][i];
 	}
 	drawNoteField();
 }

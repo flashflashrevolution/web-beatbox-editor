@@ -47,6 +47,9 @@ function loadFileList(inputFiles) {
 }
 
 function swfFile_Ready(array_buffer) {
+	edit_history.clear();
+	edit_history.add("load", {}, "Loaded SWF File: " + swf_file_name, true);
+	
 	swf_array_buffer = array_buffer;
 	swf_tags = uncompress(swf_array_buffer);
 	swf_write_buffer = swf_tags.buffer;

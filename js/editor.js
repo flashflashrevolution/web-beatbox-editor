@@ -141,7 +141,7 @@ function saveNoteModel(event) {
 		}
 	};
 	historyText += historyChangeText(historyEntry);
-	historyAdd("note", historyEntry, historyText);
+	edit_history.add("note", historyEntry, historyText);
 	
 	// Update Array
 	editor_beatbox[editor_index][0] = n_frame;
@@ -231,7 +231,7 @@ function noteShiftFrames(frameShift, fromHistory) {
 	if(fromHistory != true) {
 		var historyText = "Note Shift: " + frameShift + " frames";
 		var historyEntry = {"frames": frameShift};
-		historyAdd("shift", historyEntry, historyText, true);
+		edit_history.add("shift", historyEntry, historyText, true);
 	}
 }
 
@@ -352,10 +352,10 @@ function editorRandomColors() {
 	for(var i = 0; i < editor_beatbox.length; i++) {
 		historyEntry["old"][i] = editor_beatbox[i][2];
 		editor_beatbox[i][2] = color_classes[Math.floor(Math.random() * 9)];
-		//historyEntry["new"][i] = editor_beatbox[i][2];
+		historyEntry["new"][i] = editor_beatbox[i][2];
 	}
 	
-	historyAdd("color_random", historyEntry, historyText);
+	edit_history.add("color_random", historyEntry, historyText);
 	
 	drawNoteField();
 }

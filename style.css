@@ -168,6 +168,11 @@ body {
 #history > div {
 	margin: 5px 0 0;
 }
+
+#history .undo {
+	font-style: italic;
+	color: #6f6f6f;
+}
 	
 
 #download_urls a {
