@@ -1,16 +1,16 @@
 var edit_history = new HistoryEditor();
 
 //////////////////////////////////////////////////////////////////////
-function historyKeyInput(evt) {
-      var e = window.event? event : evt
-	  
-	  // Ctrl + Y
-      if (e.keyCode == 89 && e.ctrlKey) edit_history.stepForward();
+// Undo / Redo Key listeners.
+$(function() {
+	$(document).keydown(function(e){
+		// Ctrl + Y
+      if (e.which == 89 && e.ctrlKey) edit_history.stepForward();
 	  
 	  // Crtl + Z
-      if (e.keyCode == 90 && e.ctrlKey) edit_history.stepBack();
-}
-document.onkeydown = historyKeyInput;
+      if (e.which == 90 && e.ctrlKey) edit_history.stepBack();
+	});
+});
 
 function e_historyClick(event) {
 	var index = $(event.currentTarget).attr("data-index");
