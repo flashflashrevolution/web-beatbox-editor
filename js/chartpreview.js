@@ -91,7 +91,6 @@ const songChartPreviewer = ( p ) => {
 		drawNoteParam("receptor", "U", RECEPTOR_LINE);
 		drawNoteParam("receptor", "R", RECEPTOR_LINE);
 		
-		
 		// Draw Progress Bar
 		p.fill(PROGRESS_BAR_COLOR);
 		p.noStroke();
@@ -118,7 +117,7 @@ const songChartPreviewer = ( p ) => {
 	
 	// Begin Playback
 	p.playPreview = function(val) {
-		if(!setupComplete)
+		if(!setupComplete || music_data == null)
 			return false;
 		
 		if(music_data.isPlaying())
