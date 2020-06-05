@@ -104,6 +104,16 @@ body {
 .song_note.selected {
     animation: pulse 1s infinite ease-in-out;
 }
+.song_note.selected::before {
+    background: url('notes/note_select.png');
+	display: block;
+	width: 64px;
+	height: 64px;
+	position: relative;
+	left: -16px;
+	top: -16px;
+	content: "";
+}
 
 @keyframes pulse {
     0% { opacity: 1; }
