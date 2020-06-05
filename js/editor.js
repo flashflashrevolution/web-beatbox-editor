@@ -25,26 +25,14 @@ $(function() {
 	});
 	
 	// Editor Stuff
-	$('#editor_options .updatePreview').on('click', function(e) {
-		editorUpdatePreview();
-	});
-	$('#editor_options .shiftFrames').on('click', function(e) {
-		editorShiftFrames();
-	});
-	$('#editor_options .writeFile').on('click', function(e) {
-		editorWriteFile();
-	});
-	$('#editor_options .randomColors').on('click', function(e) {
-		editorRandomColors();
-	});
+	$('#editor_options .updatePreview').click(editorUpdatePreview);
+	$('#editor_options .shiftFrames').click(editorShiftFrames);
+	$('#editor_options .writeFile').click(editorWriteFile);
+	$('#editor_options .randomColors').click(editorRandomColors);
 	
 	// Jump Stuff
-	$('#editor_jump .jumpToNote').on('click', function(e) {
-		jumpNoteIndex();
-	});
-	$('#editor_jump .jumpToTime').on('click', function(e) {
-		jumpTimeIndex();
-	});
+	$('#editor_jump .jumpToNote').click(jumpNoteIndex);
+	$('#editor_jump .jumpToTime').click(jumpTimeIndex);
 });
 
 function resetEditor() {
@@ -220,8 +208,6 @@ function noteShiftFrames(frameShift, fromHistory) {
 	else 
 		frameShift = maxFrame - editor_beatbox[editor_beatbox.length - 1][0];
 	
-	console.log("Shifting BeatBox", frameShift, 'frames...');
-	
 	for(var i = 0; i < editor_beatbox.length; i++) {
 		editor_beatbox[i][0] += frameShift;
 	}
@@ -338,10 +324,6 @@ function editorShiftFrames() {
 }
 
 function editorRandomColors() {
-	var r = confirm("This will really mangle the note colors, are you sure?");
-	if (r != true)
-		return;
-	
 	// Add History
 	var historyText = "Color Randomizer";
 	var historyEntry = {
