@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html>
 <meta charset="UTF-8">
-	<script type="text/javascript" src="https://cdn.jsdelivr.net/pako/1.0.3/pako.min.js"></script>
 	<script type="text/javascript" src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	
+	<!-- SWF Editing -->
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/pako/1.0.3/pako.min.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
 	<script type="text/javascript" src="js/swf-tags.js"></script>
 	<script type="text/javascript" src="js/swf-reader.js"></script>
 	<script type="text/javascript" src="js/swf-writer.js"></script>
 	
 	<!-- Editor -->
+	<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@simonwep/selection-js/dist/selection.min.js"></script>
 	<script type="text/javascript" src="js/filedrop.js"></script>
 	<script type="text/javascript" src="js/editor.js"></script>
 	<script type="text/javascript" src="js/history.js"></script>
 	<script type="text/javascript" src="js/generator.js"></script>
 	<script type="text/javascript" src="js/url-loader.js"></script>
+	<script type="text/javascript" src="js/selection.js"></script>
 	
 	<!-- Chart Preview -->
 	<script type="text/javascript" src="js/p5.min.js"></script>
@@ -30,7 +34,7 @@
 	<div id="progressBarOverlay" style="display:none;">
 		<div class="fill" style="width:0%;"></div>
 	</div>
-	<div id="noteModel" style="display:none;">
+	<div id="noteModel" class="noteModel" style="display:none;">
 		<h2>Editing Note: <span class="noteIndex">0</span></h2>
 		<div class="params">
 			<span>Frame:</span><input type="number" id="note_model_frame"><br>
@@ -54,6 +58,12 @@
 		</div>
 		<div class="save">
 			<input id="saveNoteButton" type="button" value="Save Note Values" />
+		</div>
+	</div>
+	<div id="noteSelectionModel" class="noteModel" style="display:none;">
+		<h2>Editing Selection: <span class="selectionSize">0</span> Notes</h2>
+		<div class="params">
+			<a class="shiftSelectionFrames">Shift Frames</a><br/>
 		</div>
 	</div>
 	<div id="receptorModel" style="display:none;">

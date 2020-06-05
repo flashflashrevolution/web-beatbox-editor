@@ -5,7 +5,6 @@ var generated_tag_end = null;
 
 var editor_tag = null;
 var editor_beatbox = null;
-var editor_index = null;
 var frame_height = 16;
 
 var sticky_offset = 131;
@@ -14,16 +13,7 @@ var sticky_offset = 131;
 $(function() {
 	sticky_offset = $("#audioPreview").offset().top - 15;
 	window.onscroll = function() {editorScrollUpdate()};
-	
-	// Note Model
-	$("#saveNoteButton").click(saveNoteModel);
-	$(document).click(function(event) {
-		$target = $(event.target);
-		if(!$target.closest('#noteModel').length && $('#noteModel').is(":visible")) {
-			hideNoteModel();
-		}        
-	});
-	
+
 	// Editor Stuff
 	$('#editor_options .updatePreview').click(editorUpdatePreview);
 	$('#editor_options .shiftFrames').click(editorShiftFrames);
@@ -67,85 +57,6 @@ function drawNoteField() {
 		
 		target.append('<div data-index="' + i + '" class="song_note ' + note_color + ' l' + note_c + ' i' + i + '" style="top:' + note_y +'px;"> </div>');
 	}
-	$(".song_note").on("click", e_noteClick);
-}
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Single Note Editor + Model
-function e_noteClick(event) {
-	var model = $("#noteModel");
-	$(".selected").removeClass("selected");
-	
-	var target = $(event.currentTarget);
-	var targetOffset = target.offset();
-	var targetID = target.attr("data-index");
-	target.addClass("selected");
-	
-	editor_index = targetID;
-	model.attr("data-index", targetID);
-	model.css("left", (targetOffset.left + 45) + "px");
-	model.css("top", (targetOffset.top - 24) + "px");
-	event.stopPropagation();
-	
-	openNoteModel();
-}
-
-function openNoteModel() {
-	if(editor_beatbox == null || editor_index == null || editor_index < 0 || editor_index >= editor_beatbox.length)
-		return;
-	
-	var noteData = editor_beatbox[editor_index];
-	
-	$(".noteIndex").text(editor_index);
-	$("#note_model_frame").val(noteData[0]);
-	$("#note_model_dir").val(noteData[1]);
-	$("#note_model_color").val((noteData[2] || "blue"));
-	
-	$("#noteModel").show();
-}
-
-function saveNoteModel(event) {
-	if(editor_beatbox == null || editor_index == null || editor_index < 0 || editor_index >= editor_beatbox.length)
-		return;
-	
-	// Get Form Values
-	var n_frame = Number($("#note_model_frame").val());
-	var n_dir = $("#note_model_dir").val();
-	var n_color = $("#note_model_color").val();
-	
-	// Add History
-	var historyText = "Note " + editor_index + ": ";
-	var historyEntry = {
-		"index": editor_index,
-		"old": {
-			"f": editor_beatbox[editor_index][0],
-			"d": editor_beatbox[editor_index][1],
-			"c": editor_beatbox[editor_index][2]
-		},
-		"new": {
-			"f": n_frame,
-			"d": n_dir,
-			"c": n_color
-		}
-	};
-	historyText += historyChangeText(historyEntry);
-	edit_history.add("note", historyEntry, historyText);
-	
-	// Update Array
-	editor_beatbox[editor_index][0] = n_frame;
-	editor_beatbox[editor_index][1] = n_dir;
-	editor_beatbox[editor_index][2] = n_color;
-	
-	// Update HTML Node
-	updateNoteDisplay(editor_index);
-	
-	hideNoteModel();
-}
-
-function hideNoteModel() {
-	$(".selected").removeClass("selected");
-	$("#noteModel").hide();
-	editor_index = null;
 }
 
 function updateNoteDisplay(index) {

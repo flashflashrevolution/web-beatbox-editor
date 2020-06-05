@@ -84,10 +84,11 @@ HistoryEditor.prototype.build = function(entry) {
 	var built = null;
 	
 	switch(entry["type"]) {
-		case "load":			built = new HistoryTypeLoad(entry);			break;
-		case "note":			built = new HistoryTypeNote(entry);			break;
-		case "shift":			built = new HistoryTypeShift(entry);		break;
-		case "color_random":	built = new HistoryTypeColorRandom(entry);	break;
+		case "load":             built = new HistoryTypeLoad(entry);           break;
+		case "note":             built = new HistoryTypeNote(entry);           break;
+		case "shift":            built = new HistoryTypeShift(entry);          break;
+		case "color_random":     built = new HistoryTypeColorRandom(entry);    break;
+		case "selection_shift":  built = new HistoryTypeSelectionShift(entry); break;
 	}
 	
 	if(built != null) {
@@ -100,17 +101,14 @@ HistoryEditor.prototype.build = function(entry) {
 HistoryEditor.prototype.undoEntry = function(id) {
 	this.entries[id].undo();
 	$("#history_entry_" + id).addClass("undo");
-	//console.log("Undo Entry", id);
 }
 
 HistoryEditor.prototype.redoEntry = function(id) {
 	this.entries[id].redo();
 	$("#history_entry_" + id).removeClass("undo");
-	//console.log("Redo Entry", id);
 }
 
 HistoryEditor.prototype.jumpToHistory = function(index) {
-	//console.log("History Jump", this.active_index, '->', index);
 	var entry = this.get(index);
 	
 	if(entry == null || this.active_index == index)
@@ -211,4 +209,19 @@ HistoryTypeColorRandom.prototype.redo = function() {
 		editor_beatbox[i][2] = this.entry["data"]["new"][i];
 	}
 	drawNoteField();
+}
+
+//////////////////////////////////////////////////////////////////////
+function HistoryTypeSelectionShift(entry) {
+	this.entry = entry;
+}
+
+HistoryTypeSelectionShift.prototype.undo = function() {
+	var frame_shift = this.entry["data"]["frames"];
+	noteSelectionShiftFrames(-frame_shift, this.entry["data"]["indexes"], true);
+}
+
+HistoryTypeSelectionShift.prototype.redo = function() {
+	var frame_shift = this.entry["data"]["frames"];
+	noteSelectionShiftFrames(frame_shift, this.entry["data"]["indexes"], true);
 }

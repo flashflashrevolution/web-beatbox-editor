@@ -76,6 +76,11 @@ body {
 	position: relative;
 	background: #111 url('notes/chart_background.png');
 }
+.chart-selection {
+    background: rgba(46, 115, 252, 0.11);
+    border-radius: 0.1em;
+    border: 2px solid rgba(98, 155, 255, 0.81);
+}
 .song_note {
 	background: transparent no-repeat top left;
 	width:32px;
@@ -255,7 +260,7 @@ body.fileDrag #fileDropOverlay {
 	width: 400px;
 }
 
-#noteModel {
+#noteSelectionModel {
 	position: absolute;
 	top: 50px;
 	left: 50px;
@@ -266,33 +271,55 @@ body.fileDrag #fileDropOverlay {
 	box-shadow: 0 0 5px #000;
 }
 
-#noteModel h2 {
-	margin: 0 0 5px;
+#noteSelectionModel a {
+	display: block;
+	padding: 5px;
+	background: #181819;
+	border: 2px solid #484848;
+	text-align: center;
+	cursor: pointer;
 }
 
-#noteModel span {
+.noteModel {
+	position: absolute;
+	top: 50px;
+	left: 50px;
+	border: 2px solid #484848;
+	background: #333;
+	padding: 15px;
+	z-index: 100000;
+	box-shadow: 0 0 5px #000;
+}
+
+.noteModel h2 {
+	margin: 0px 0 5px;
+	border-bottom: 2px dotted #484848;
+	padding: 0 0 5px;
+}
+
+.noteModel .params span {
 	display: inline-block;
 	width: 100px;
 	margin: 7px 0 0;
 }
 
-#noteModel span:first-child {
+.noteModel span:first-child {
 	margin: 0;
 }
 
-#noteModel .params input {
+.noteModel .params input {
 	width: 113px;
 }
 
-#noteModel .params select {
+.noteModel .params select {
 	width: 113px;
 }
 
-#noteModel .save {
+.noteModel .save {
 	width: 100%;
 	margin: 5px 0 0 0;
 }
 
-#noteModel .save input {
+.noteModel .save input {
 	width: 100%;
 }
