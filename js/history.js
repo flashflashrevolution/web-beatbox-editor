@@ -69,7 +69,7 @@ HistoryEditor.prototype.add = function(type, data, log_text, ignore_changes) {
 			this.active_index = id;
 			
 			// Add HTML Button
-			var historyHtml = '<div data-index="' + id + '" id="history_entry_' + id + '"><a>• ' + log_text + '</a></div>';
+			var historyHtml = '<div data-index="' + id + '" id="history_entry_' + id + '"><a>' + log_text + '</a></div>';
 			$("#history").append(historyHtml);
 			$("#history_entry_" + id).on("click", e_historyClick);
 		}

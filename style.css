@@ -177,6 +177,11 @@ body {
 
 #history > div {
 	margin: 5px 0 0;
+	cursor: pointer;
+}
+
+#history a::before {
+	content: "• ";
 }
 
 #history .undo {
