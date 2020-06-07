@@ -5,10 +5,10 @@ var edit_history = new HistoryEditor();
 $(function() {
 	$(document).keydown(function(e){
 		// Ctrl + Y
-      if (e.which == 89 && e.ctrlKey) edit_history.stepForward();
-	  
-	  // Crtl + Z
-      if (e.which == 90 && e.ctrlKey) edit_history.stepBack();
+		if (e.which == 89 && e.ctrlKey) edit_history.stepForward();
+
+		// Crtl + Z
+		if (e.which == 90 && e.ctrlKey) edit_history.stepBack();
 	});
 });
 
