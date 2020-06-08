@@ -58,7 +58,7 @@ ByteReader.prototype.readUInt8 = function() {
 ByteReader.prototype.readFloat = function() {
 	var value = 0;
 	try {
-		value = this.buffer.getFloat32(this.pointer);
+		value = this.buffer.getFloat32(this.pointer, true);
 		this.pointer += 4;
 	} catch ( e ) {
 		throw e;
@@ -75,7 +75,7 @@ ByteReader.prototype.readFloat = function() {
 ByteReader.prototype.readDouble = function() {
 	var value = 0;
 	try {
-		value = this.buffer.getFloat64(this.pointer);
+		value = this.buffer.getFloat64(this.pointer, true);
 		this.pointer += 8;
 	} catch ( e ) {
 		throw e;
