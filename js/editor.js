@@ -100,14 +100,6 @@ function noteCloneAllSorted(data) {
 	return out;
 }
 
-function constantPoolClone(data) {
-	let out = [];
-	$.each(data, function (index, value) {
-		out.push(value);
-	});
-	return out;
-}
-
 function noteShiftFrames(frameShift, fromHistory) {
 	frameShift = Number(frameShift);
 		
@@ -166,7 +158,6 @@ function editorScrollUpdate() {
 	}
 }
 
-
 function editorUpdatePreview() {
 	if(chartPreview)
 		chartPreview.setChartBeatbox(editor_beatbox);
@@ -183,12 +174,17 @@ function editorWriteFile() {
 	
 	// Rebuild Beatbox Order
 	var newBeatboxArray = noteCloneAllSorted(editor_beatbox);
-	var newConstantPool = constantPoolClone(editor_tag["pool"]);
 	
-	// Write File
+	// Write Beatbox Opcodes
 	var beatboxSize = (generated_tag_end || editor_tag.header.end);
 	
-	var newBeatbox = generateBeatBoxActionTag(newBeatboxArray, newConstantPool);
+	var newPCode = new PCode();
+	$.each(editor_tag["pool"], function (index, value) {
+		newPCode.addConstant(value);
+	});
+	newPCode.writeVariable("_root.beatBox", newBeatboxArray);
+	
+	var newBeatbox = new PCodeCompile(newPCode).tag;
 	var newBeatboxBuffer = newBeatbox.getBuffer();
 	
 	swf_write_buffer.seek(editor_tag.header.start);
@@ -207,7 +203,7 @@ function editorWriteFile() {
 	var final_file_arrr = new Uint8Array(final_file);
 	
 	// Copy Header
-	final_file_view.setUint8(0, 0x43); // Char 'C'
+	final_file_view.setUint8(0, 0x43); // 0x43 = Char 'C', 0x46 = Char 'F'
 	for(var i = 1; i < 4; i++)
 		final_file_view.setUint8(i, swf_write_buffer.buffer.getUint8(i));
 	
