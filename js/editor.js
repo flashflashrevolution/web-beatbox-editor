@@ -194,6 +194,7 @@ function editorWriteFile() {
 	generated_tag_end = editor_tag.header.start + newBeatboxBuffer.byteLength;
 	
 	// Create Buffers
+	var raw_size = swf_write_buffer.buffer_raw.byteLength; // Uncompressed Size
 	var raw_data = swf_write_buffer.buffer_raw.slice(8);
 	var compressed_data = pako.deflate(raw_data);
 	var new_size = compressed_data.byteLength + 8;
@@ -207,8 +208,8 @@ function editorWriteFile() {
 	for(var i = 1; i < 4; i++)
 		final_file_view.setUint8(i, swf_write_buffer.buffer.getUint8(i));
 	
-	// Write New Size
-	final_file_view.setUint32(4, new_size, true);
+	// Write New Uncompressed Size
+	final_file_view.setUint32(4, raw_size, true);
 	
 	// Copy Compressed to Final
 	final_file_arrr.set(compressed_data, 8);
