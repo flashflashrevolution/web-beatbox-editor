@@ -159,6 +159,9 @@ function editorScrollUpdate() {
 }
 
 function editorUpdatePreview() {
+	if(editor_beatbox == null)
+		return;
+	
 	if(chartPreview)
 		chartPreview.setChartBeatbox(editor_beatbox);
 }
@@ -223,6 +226,9 @@ function editorWriteFile() {
 }
 
 function editorShiftFrames() {
+	if(editor_beatbox == null)
+		return;
+	
 	var frameShift = prompt("Enter Amount", "0");
 
 	if (frameShift == null || frameShift == "") {}
@@ -232,6 +238,9 @@ function editorShiftFrames() {
 }
 
 function editorRandomColors() {
+	if(editor_beatbox == null)
+		return;
+	
 	// Add History
 	var historyText = "Color Randomizer";
 	var historyEntry = {
