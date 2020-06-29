@@ -26,6 +26,7 @@ $(function() {
 });
 
 function resetEditor() {
+	generated_tag_end = null;
 	editor_tag = null;
 	editor_beatbox = null;
 	editor_index = null;
@@ -34,6 +35,7 @@ function resetEditor() {
 }
 
 function populateEditor(tag) {
+	generated_tag_end = null;
 	editor_tag = tag
 	editor_beatbox = noteCloneAll(editor_tag["variables"]["_root"]["beatBox"]);
 	
