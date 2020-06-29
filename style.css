@@ -180,9 +180,18 @@ body {
 	text-align: center;
 }
 
+#history {
+	max-height: 300px;
+	overflow-y: auto;
+}
+
 #history > div {
-	margin: 5px 0 0;
+	padding: 4px 0;
 	cursor: pointer;
+}
+
+#history > div:hover {
+	background: #ffffff17;
 }
 
 #history a::before {
