@@ -152,8 +152,10 @@ function jumpTimeIndex() {
 
 function editorScrollUpdate() {
 	if (window.pageYOffset > sticky_offset) {
+		$(".sticky_container").outerWidth($(".sticky_container").outerWidth());
 		$(".sticky_container").addClass("sticky");
 	} else {
+		$(".sticky_container").outerWidth("");
 		$(".sticky_container").removeClass("sticky");
 	}
 }
