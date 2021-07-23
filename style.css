@@ -82,10 +82,17 @@ body {
     border: 2px solid rgba(98, 155, 255, 0.81);
 }
 .song_note {
+	display: none;
+}
+.note_display .song_note {
+	display: inline;
+}
+.song_note {
 	background: transparent no-repeat top left;
 	width:32px;
 	height:32px;
 	position: absolute;
+	z-index: 50000;
 }
 .song_note.l0 {
 	left: 10px;
@@ -104,6 +111,15 @@ body {
 .song_note.l3 {
 	left: 202px;
 	transform: rotate(270deg);
+}
+
+.song_note.ghost {
+	display: none;
+}
+.ghost_display .song_note.ghost {
+	display: inline;
+	z-index: 100;
+	opacity: 0.3;
 }
 
 .song_note.selected {
@@ -176,8 +192,9 @@ body {
 	background: #333;
 	margin: 2px;
 	font-weight: bold;
-	min-width: 150px;
+	min-width: 205px;
 	text-align: center;
+	cursor: pointer;
 }
 
 #history {

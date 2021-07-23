@@ -6,6 +6,7 @@ var generated_tag_end = null;
 var editor_tag = null;
 var editor_beatbox = null;
 var frame_height = 16;
+var frame_height_ms = 16 * 30;
 
 var sticky_offset = 131;
 
@@ -15,6 +16,8 @@ $(function() {
 	window.onscroll = function() {editorScrollUpdate()};
 
 	// Editor Stuff
+	$('#editor_options .toggleGhostNotes').click(editorGhostNotes);
+	$('#editor_options .toggleNotes').click(editorNotes);
 	$('#editor_options .updatePreview').click(editorUpdatePreview);
 	$('#editor_options .shiftFrames').click(editorShiftFrames);
 	$('#editor_options .writeFile').click(editorWriteFile);
@@ -55,21 +58,32 @@ function drawNoteField() {
 		note = editor_beatbox[i]
 		note_c = noteGetColumn(note[1]);
 		note_y = note[0] * frame_height;
-		note_color = note[2] || 'blue';
+		note_color = note[2];
+		note_y_ms = (note[3] / 1000) * frame_height_ms;
 		
-		target.append('<div data-index="' + i + '" class="song_note ' + note_color + ' l' + note_c + ' i' + i + '" style="top:' + note_y +'px;"> </div>');
+		target.append('<div data-index="' + i + '" class="song_note edit ' + note_color + ' l' + note_c + ' i' + i + '" style="top:' + note_y +'px;"> </div>');
+		target.append('<div data-index="' + i + '" class="song_note ghost white l' + note_c + ' g' + i + '" style="top:' + note_y_ms +'px;"> </div>');
 	}
 }
 
 function updateNoteDisplay(index) {
+	// Main
 	var elm = $(".i" + index);
 	
 	var note_c = noteGetColumn(editor_beatbox[index][1]);
 	var note_y = editor_beatbox[index][0] * frame_height;
-	var note_color = editor_beatbox[index][2] || 'blue';
+	var note_color = editor_beatbox[index][2];
 		
 	elm.removeClass(lane_classes).removeClass(color_classes);
 	elm.addClass(["l" + note_c, note_color]);
+	elm.css("top", note_y + "px");
+	
+	// Ghost (MS Timing)
+	elm = $(".g" + index);
+	note_y = (editor_beatbox[index][3] / 1000) * frame_height_ms;
+	
+	elm.removeClass(lane_classes);
+	elm.addClass(["l" + note_c]);
 	elm.css("top", note_y + "px");
 }
 
@@ -78,7 +92,7 @@ function updateNoteDisplay(index) {
 function noteCloneAll(data) {
 	let out = [];
 	$.each(data, function (index, value) {
-		out.push([value[0], value[1], (value[2] ? value[2] : "blue")]);
+		out.push([value[0], value[1], (value[2] ? value[2] : "blue"), (value[3] ? value[3] : Math.round((value[0] / 30)*1000))]);
 	});
 	return out;
 }
@@ -92,10 +106,7 @@ function noteGetColumn(dir) {
 }
 
 function noteCloneAllSorted(data) {
-	let out = [];
-	$.each(data, function (index, value) {
-		out.push([value[0], value[1], (value[2] ? value[2] : "blue")]);
-	});
+	let out = noteCloneAll(data);
 	out.sort(function(a, b) {
 		return a[0] - b[0];
 	});
@@ -160,6 +171,14 @@ function editorScrollUpdate() {
 		$(".sticky_container").outerWidth("");
 		$(".sticky_container").removeClass("sticky");
 	}
+}
+
+function editorGhostNotes() {
+	$('#noteListContainer').toggleClass('ghost_display');
+}
+
+function editorNotes() {
+	$('#noteListContainer').toggleClass('note_display');
 }
 
 function editorUpdatePreview() {

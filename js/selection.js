@@ -56,7 +56,8 @@ function openNoteModelSingle(target) {
 	$(".noteIndex").text(editor_index);
 	$("#note_model_frame").val(noteData[0]);
 	$("#note_model_dir").val(noteData[1]);
-	$("#note_model_color").val((noteData[2] || "blue"));
+	$("#note_model_color").val(noteData[2]);
+	$("#note_model_time").val(noteData[3]);
 	
 	// Display Panel
 	updateNoteModelPosition();
@@ -80,6 +81,7 @@ function saveNoteModel(event) {
 	var n_frame = Number($("#note_model_frame").val());
 	var n_dir = $("#note_model_dir").val();
 	var n_color = $("#note_model_color").val();
+	var n_time = Number($("#note_model_time").val());
 	
 	// Add History
 	var historyText = "Note " + editor_index + ": ";
@@ -88,12 +90,14 @@ function saveNoteModel(event) {
 		"old": {
 			"f": editor_beatbox[editor_index][0],
 			"d": editor_beatbox[editor_index][1],
-			"c": editor_beatbox[editor_index][2] || "blue"
+			"c": editor_beatbox[editor_index][2],
+			"t": editor_beatbox[editor_index][3]
 		},
 		"new": {
 			"f": n_frame,
 			"d": n_dir,
-			"c": n_color
+			"c": n_color,
+			"t": n_time
 		}
 	};
 	historyText += historyChangeText(historyEntry);
@@ -103,6 +107,7 @@ function saveNoteModel(event) {
 	editor_beatbox[editor_index][0] = n_frame;
 	editor_beatbox[editor_index][1] = n_dir;
 	editor_beatbox[editor_index][2] = n_color;
+	editor_beatbox[editor_index][3] = n_time;
 	
 	// Update HTML Node
 	updateNoteDisplay(editor_index);
@@ -198,7 +203,7 @@ function noteSelectionShiftFrames(frameShift, indexes, fromHistory) {
 note_selector = Selection.create({
 	singleClick: true,
     class: 'chart-selection',
-    selectables: ['#chart_box > div'],
+    selectables: ['#chart_box .edit'],
     boundaries: ['#noteListContainer']
 }).on('start', ({inst, selected, oe}) => {
     if (!oe.ctrlKey && !oe.metaKey) {

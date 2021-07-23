@@ -124,7 +124,7 @@ HistoryEditor.prototype.jumpToHistory = function(index) {
 	}
 	// We're behind, go forward.
 	else if(this.active_index < index) {
-		for(var i = this.active_index; i <= index; i++) {
+		for(var i = this.active_index + 1; i <= index; i++) {
 			this.redoEntry(i);
 		}
 	}
@@ -162,6 +162,7 @@ HistoryTypeNote.prototype.undo = function() {
 	editor_beatbox[note_index][0] = this.entry["data"]["old"]["f"];
 	editor_beatbox[note_index][1] = this.entry["data"]["old"]["d"];
 	editor_beatbox[note_index][2] = this.entry["data"]["old"]["c"];
+	editor_beatbox[note_index][3] = this.entry["data"]["old"]["t"];
 	
 	// Update HTML Node
 	updateNoteDisplay(note_index);
@@ -174,6 +175,7 @@ HistoryTypeNote.prototype.redo = function() {
 	editor_beatbox[note_index][0] = this.entry["data"]["new"]["f"];
 	editor_beatbox[note_index][1] = this.entry["data"]["new"]["d"];
 	editor_beatbox[note_index][2] = this.entry["data"]["new"]["c"];
+	editor_beatbox[note_index][3] = this.entry["data"]["new"]["t"];
 	
 	// Update HTML Node
 	updateNoteDisplay(note_index);
